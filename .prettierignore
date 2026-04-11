@@ -8,3 +8,6 @@ bun.lockb
 # Miscellaneous
 /static/
 /drizzle/
+
+# slurm openapi schema
+slurm-openapi.gen.json
