@@ -2,7 +2,7 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
 import { slurmJob } from '$lib/server/db/schema';
-import { type SlurmJobInsert } from '$lib/server/db/schema';
+import { type SlurmJobInsert } from '$lib/server/db/types';
 import * as v from 'valibot';
 import { createJobSchema } from '$lib/validation/job';
 import { getJobStatus, submitJob } from '$lib/server/slurm';

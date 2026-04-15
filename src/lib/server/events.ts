@@ -1,12 +1,23 @@
 type Listener = () => void;
 
-const listeners = new Set<Listener>();
+const jobListeners = new Set<Listener>();
 
 export function onJobsChanged(listener: Listener) {
-	listeners.add(listener);
-	return () => listeners.delete(listener);
+	jobListeners.add(listener);
+	return () => jobListeners.delete(listener);
 }
 
 export function notifyJobsChanged() {
-	listeners.forEach((listener) => listener());
+	jobListeners.forEach((listener) => listener());
+}
+
+const notebookListeners = new Set<Listener>();
+
+export function onNotebooksChanged(listener: Listener) {
+	notebookListeners.add(listener);
+	return () => notebookListeners.delete(listener);
+}
+
+export function notifyNotebooksChanged() {
+	notebookListeners.forEach((listener) => listener());
 }

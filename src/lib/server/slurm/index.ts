@@ -1,1 +1,1 @@
-export { getJobStatus, submitJob } from './jobs';
+export { cancelJob, getJob, getJobStatus, submitJob } from './jobs';
