@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { SlurmJobSelect } from '$lib/server/db/types';
+	import type { ApiJob } from '$lib/api';
 	import { onMount } from 'svelte';
 	import JobTable from './JobTable.svelte';
 	import Modal from '$lib/components/Modal.svelte';
@@ -8,7 +8,7 @@
 	import * as v from 'valibot';
 
 	let showJobCreateForm = $state(false);
-	let jobs = $state<SlurmJobSelect[]>([]);
+	let jobs = $state<ApiJob[]>([]);
 	let loading = $state(true);
 	let name = $state('');
 	let script = $state('');
@@ -72,29 +72,30 @@
 			body: JSON.stringify(result.output)
 		});
 
-		const data = await response.json();
+		await response.json().catch(() => null);
 		submitting = false;
 
-		if (data.ok) {
+		if (response.ok) {
 			resetForm();
 			showJobCreateForm = false;
 		}
 	}
 
-	onMount(() => {
+	void onMount(() => {
 		fetch('/api/jobs')
 			.then((res) => res.json())
-			.then((result) => {
-				if (result.ok) {
-					jobs = result.value;
-				}
+			.then((result: ApiJob[]) => {
+				jobs = result;
+				loading = false;
+			})
+			.catch(() => {
 				loading = false;
 			});
 
 		const eventSource = new EventSource('/api/jobs/events');
 
 		eventSource.onmessage = (event) => {
-			jobs = JSON.parse(event.data);
+			jobs = JSON.parse(event.data) as ApiJob[];
 		};
 
 		return () => eventSource.close();

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { NotebookSelect } from '$lib/server/db/types';
+	import type { ApiNotebook } from '$lib/api';
 	import Modal from '$lib/components/Modal.svelte';
 	import NotebookTable from './NotebookTable.svelte';
 	import JobForm from '$lib/components/JobForm.svelte';
@@ -8,7 +8,7 @@
 	import * as v from 'valibot';
 
 	let showNotebookCreateForm = $state(false);
-	let notebooks = $state<NotebookSelect[]>([]);
+	let notebooks = $state<ApiNotebook[]>([]);
 	let loading = $state(true);
 	let name = $state('');
 	let parition = $state('');
@@ -72,10 +72,10 @@
 			body: JSON.stringify(result.output)
 		});
 
-		const data = await response.json();
+		await response.json().catch(() => null);
 		submitting = false;
 
-		if (data.ok) {
+		if (response.ok) {
 			resetForm();
 			showNotebookCreateForm = false;
 		}
@@ -84,17 +84,18 @@
 	void onMount(() => {
 		fetch('/api/notebooks')
 			.then((res) => res.json())
-			.then((result) => {
-				if (result.ok) {
-					notebooks = result.value;
-				}
+			.then((result: ApiNotebook[]) => {
+				notebooks = result;
+				loading = false;
+			})
+			.catch(() => {
 				loading = false;
 			});
 
 		const eventSource = new EventSource('/api/notebooks/events');
 
 		eventSource.onmessage = (event) => {
-			notebooks = JSON.parse(event.data);
+			notebooks = JSON.parse(event.data) as ApiNotebook[];
 		};
 
 		return () => eventSource.close();

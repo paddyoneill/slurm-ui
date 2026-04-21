@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { SlurmJobSelect } from '$lib/server/db/types';
+	import type { ApiJob } from '$lib/api';
 	import { formatAge } from '$lib/date';
 	let {
 		jobs,
 		loading
 	}: {
-		jobs: SlurmJobSelect[];
+		jobs: ApiJob[];
 		loading: boolean;
 	} = $props();
 
@@ -14,9 +14,9 @@
 	async function deleteJob(id: string) {
 		deletingIds = new Set([...deletingIds, id]);
 		const response = await fetch(`/api/jobs/${id}`, { method: 'DELETE' });
-		const result = await response.json();
 
-		if (!result.ok) {
+		if (!response.ok && response.status !== 204) {
+			await response.json().catch(() => null);
 			deletingIds = new Set([...deletingIds].filter((i) => i !== id));
 		}
 	}
@@ -40,13 +40,13 @@
 				{#if loading}
 					<tr><td colspan="5" class="text-center text-2xl font-medium">Loading jobs...</td></tr>
 				{:else}
-					{#each jobs as { id, state, jobId, createdAt }, i (id)}
+					{#each jobs as { id, state, slurmJobId, createdAt }, i (id)}
 						<tr
 							class="border-t border-gray-100 {i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
 								{deletingIds.has(id) ? 'pointer-events-none opacity-50' : ''}"
 						>
 							<td class="px-4 py-3">{id}</td>
-							<td class="px-4 py-3">{jobId}</td>
+							<td class="px-4 py-3">{slurmJobId}</td>
 							<td class="px-4 py-3">{state}</td>
 							<td class="px-4 py-3">
 								<span class="group relative cursor-default">
@@ -54,7 +54,7 @@
 									<span
 										class="absolute bottom-full left-0 z-50 hidden rounded-md bg-gray-900 px-3 py-2 text-xs text-white shadow-lg group-hover:block"
 									>
-										{createdAt.toLocaleString()}
+										{new Date(createdAt).toLocaleString()}
 									</span>
 								</span>
 							</td>

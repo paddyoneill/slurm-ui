@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { NotebookSelect } from '$lib/server/db/types';
+	import type { ApiNotebook } from '$lib/api';
 
 	let {
 		notebooks,
 		loading
 	}: {
-		notebooks: NotebookSelect[];
+		notebooks: ApiNotebook[];
 		loading: boolean;
 	} = $props();
 
@@ -14,9 +14,9 @@
 	async function deleteNotebook(id: string) {
 		deletingIds = new Set([...deletingIds, id]);
 		const response = await fetch(`/api/notebooks/${id}`, { method: 'DELETE' });
-		const result = await response.json();
 
-		if (!result.ok) {
+		if (!response.ok && response.status !== 204) {
+			await response.json().catch(() => null);
 			deletingIds = new Set([...deletingIds].filter((i) => i !== id));
 		}
 	}
