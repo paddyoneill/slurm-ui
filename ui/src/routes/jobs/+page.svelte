@@ -2,84 +2,10 @@
 	import type { ApiJob } from '$lib/api';
 	import { onMount } from 'svelte';
 	import JobTable from './JobTable.svelte';
-	import Modal from '$lib/components/Modal.svelte';
-	import JobForm from '$lib/components/JobForm.svelte';
-	import { createJobSchema } from '$lib/validation/job';
-	import * as v from 'valibot';
+	import { resolve } from '$app/paths';
 
-	let showJobCreateForm = $state(false);
 	let jobs = $state<ApiJob[]>([]);
 	let loading = $state(true);
-	let name = $state('');
-	let script = $state('');
-	let parition = $state('');
-	let currentWorkingDirectory = $state('/home');
-	let cpusPerTask = $state(1);
-	let tasksPerNode = $state(1);
-	let memoryPerNode = $state(1);
-	let timeLimit = $state(1);
-	let envVars = $state<{ key: string; value: string }[]>([]);
-	let errors = $state<Record<string, string>>({});
-	let submitting = $state(false);
-
-	function resetForm() {
-		name = '';
-		script = '';
-		parition = '';
-		currentWorkingDirectory = '/home';
-		cpusPerTask = 1;
-		tasksPerNode = 1;
-		memoryPerNode = 1;
-		timeLimit = 1;
-		errors = {};
-		envVars = [];
-	}
-
-	async function handleSubmit() {
-		errors = {};
-
-		const input = {
-			name,
-			script,
-			parition: parition || undefined,
-			currentWorkingDirectory,
-			environment: envVars
-				.filter((e) => e.key.trim())
-				.map((e) => `${e.key.trim()}=${e.value.trim()}`),
-			cpusPerTask: cpusPerTask > 1 ? cpusPerTask : undefined,
-			tasksPerNode: tasksPerNode > 1 ? tasksPerNode : undefined,
-			memoryPerNode: memoryPerNode > 1 ? memoryPerNode : undefined,
-			timeLimit: timeLimit > 1 ? timeLimit : undefined
-		};
-
-		const result = v.safeParse(createJobSchema, input);
-
-		if (!result.success) {
-			for (const issue of result.issues) {
-				const key = issue.path?.[0]?.key as string;
-				if (key && !errors[key]) {
-					errors[key] = issue.message;
-				}
-			}
-			return;
-		}
-
-		submitting = true;
-
-		const response = await fetch('/api/jobs', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(result.output)
-		});
-
-		await response.json().catch(() => null);
-		submitting = false;
-
-		if (response.ok) {
-			resetForm();
-			showJobCreateForm = false;
-		}
-	}
 
 	void onMount(() => {
 		fetch('/api/jobs')
@@ -102,40 +28,60 @@
 	});
 </script>
 
-<div class="flex h-full flex-col items-center">
-	<JobTable {jobs} {loading} />
-	<div class="flex justify-center">
-		<button
-			class="m-4 rounded bg-green-600 px-4 py-2 text-white hover:bg-green-700"
-			onclick={() => (showJobCreateForm = true)}>New Job</button
-		>
+<section class="page-copy">
+	<div>
+		<h2>Jobs</h2>
+		<p>Browse submitted workloads and open the create flow when you need a new batch job</p>
 	</div>
+	<a href={resolve('/jobs/new')} class="page-action">Create Job</a>
+</section>
+
+<div class="table">
+	<JobTable {jobs} {loading} />
 </div>
 
-<Modal bind:showModal={showJobCreateForm} title="Create New Job">
-	<JobForm
-		bind:name
-		bind:parition
-		bind:currentWorkingDirectory
-		bind:cpusPerTask
-		bind:tasksPerNode
-		bind:memoryPerNode
-		bind:timeLimit
-		bind:envVars
-		{errors}
-		onSubmit={handleSubmit}
-		{submitting}
-	>
-		<div>
-			<label class="block text-sm font-medium text-gray-700"
-				>Script
-				<textarea
-					bind:value={script}
-					rows="10"
-					class="mt-1 block w-full rounded-md border-gray-300 font-mono shadow-sm focus:border-teal-500 focus:ring-teal-500"
-				></textarea>
-				{#if errors.script}<span class="text-sm text-red-500">{errors.script}</span>{/if}
-			</label>
-		</div>
-	</JobForm>
-</Modal>
+<style>
+	.page-copy {
+		display: flex;
+		align-content: flex-start;
+		justify-content: space-between;
+		gap: var(--space-4);
+		margin-bottom: var(--space-6);
+	}
+
+	h2 {
+		margin: 0;
+		font-size: 1.75rem;
+		letter-spacing: -0.03em;
+	}
+
+	p {
+		margin: var(--space-2) 0 0;
+		color: var(--colour-text-muted);
+	}
+
+	.page-action {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 2.75rem;
+		padding: 0 1rem;
+		border: 1px solid var(--colour-border);
+		border-radius: var(--border-md);
+		background: var(--colour-surface);
+		font-weight: 600;
+		box-shadow: var(--shadow-sm);
+	}
+
+	.table {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	@media (max-width: 760px) {
+		.page-copy {
+			flex-direction: column;
+		}
+	}
+</style>
