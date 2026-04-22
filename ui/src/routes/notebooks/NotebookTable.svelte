@@ -40,14 +40,14 @@
 					<tr><td colspan="5" class="text-center text-2xl font-medium">Loading notebooks...</td></tr
 					>
 				{:else}
-					{#each notebooks as { id, state, host, token }, i (id)}
+					{#each notebooks as { id, state, host, port, token }, i (id)}
 						<tr class="border-t border-gray-100 {i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}">
 							<td class="px-4 py-3">{id}</td>
 							<td class="px-4 py-3">{state}</td>
 							<td class="px-4 py-3"
 								><button
 									class="h-10 w-24 rounded bg-teal-600 px-4 py-2 font-semibold text-white hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
-									disabled={!host}
+									disabled={!host || !port}
 									onclick={() =>
 										window.open(`/api/notebooks/${id}/proxy/?token=${token}`, '_blank')}
 									>{#if !host}

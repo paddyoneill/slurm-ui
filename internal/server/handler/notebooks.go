@@ -80,9 +80,16 @@ func (h *Handler) PostNotebooks(w http.ResponseWriter, r *http.Request) {
 
 	notebookID := uuid.New()
 	token := uuid.NewString()
+	registrationToken := uuid.NewString()
 	script := buildNotebookScript()
-	environment := buildNotebookEnvironment(notebookID, token, req)
 
+	registrationURL, err := buildNotebookRegisterURL(notebookID)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, fmt.Errorf("build notebook registration url: %w", err))
+		return
+	}
+
+	environment := buildNotebookEnvironment(notebookID, token, registrationToken, registrationURL, req)
 	jobReq := buildSubmitJobRequest(req.LaunchConfig, script, &environment)
 
 	slurmJobID, err := slurm.SubmitJob(r.Context(), jobReq)
@@ -102,7 +109,7 @@ func (h *Handler) PostNotebooks(w http.ResponseWriter, r *http.Request) {
 		notebookName = *jobInfo.Name
 	}
 
-	record, err := db.CreateNotebook(r.Context(), h.db, notebookID, slurmJobID, notebookName, jobInfo.State, jobInfo.Host, notebookPort, token, *req.BaseEnv)
+	record, err := db.CreateNotebook(r.Context(), h.db, notebookID, slurmJobID, notebookName, jobInfo.State, jobInfo.Host, unregisteredNotebookPort, token, registrationToken, *req.BaseEnv)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
@@ -119,4 +126,27 @@ func (h *Handler) PostNotebooks(w http.ResponseWriter, r *http.Request) {
 
 	h.NotifyNotebooksChanged()
 	writeJSON(w, http.StatusCreated, response)
+}
+
+func (h *Handler) PostNotebooksIdRegister(w http.ResponseWriter, r *http.Request, id servertypes.NotebookID) {
+	req, validationErr := decodeRegisterNotebookRequest(r)
+	if validationErr != nil {
+		writeJSON(w, http.StatusBadRequest, validationErr)
+		return
+	}
+
+	if err := db.RegisterNotebookPort(r.Context(), h.db, id, req.RegistrationToken, req.Port); err != nil {
+		switch {
+		case errors.Is(err, db.ErrNotebookNotFound):
+			writeError(w, http.StatusNotFound, err)
+		case errors.Is(err, db.ErrNotebookRegistrationTokenInvalid):
+			writeError(w, http.StatusForbidden, err)
+		default:
+			writeError(w, http.StatusInternalServerError, err)
+		}
+		return
+	}
+
+	h.NotifyNotebooksChanged()
+	w.WriteHeader(http.StatusNoContent)
 }

@@ -69,6 +69,15 @@ func New(db *sql.DB) *http.Server {
 
 		h.DeleteNotebooksId(w, r, jobID)
 	})
+	router.HandleFunc("POST "+baseUrl+"/notebooks/{id}/register", func(w http.ResponseWriter, r *http.Request) {
+		jobID, err := parseUUIDPathValue(r, "id")
+		if err != nil {
+			writeJSONError(w, http.StatusBadRequest, fmt.Errorf("invalid job id: %w", err))
+			return
+		}
+
+		h.PostNotebooksIdRegister(w, r, jobID)
+	})
 
 	for _, method := range []string{"DELETE", "GET", "PATCH", "POST", "PUT"} {
 		router.HandleFunc(method+" "+baseUrl+"/notebooks/{id}/proxy", h.HandleNotebookProxy)

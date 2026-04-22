@@ -8,6 +8,12 @@ type CreateNotebookRequest struct {
 	BaseEnv *string `json:"baseEnv,omitempty"`
 }
 
+// RegisterNotebookRequest is the JSON payload accepted from notebook port registration requests.
+type RegisterNotebookRequest struct {
+	Port              int    `json:"port"`
+	RegistrationToken string `json:"registrationToken"`
+}
+
 // Notebook is the JSON representation returned for notebook resources.
 type Notebook struct {
 	BaseEnv                 string    `json:"baseEnv"`

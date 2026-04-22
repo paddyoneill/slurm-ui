@@ -42,6 +42,11 @@ func (h *Handler) proxyNotebookRequest(w http.ResponseWriter, r *http.Request, i
 		return
 	}
 
+	if record.Port < 1 {
+		writeError(w, http.StatusBadGateway, fmt.Errorf("notebook port is not available"))
+		return
+	}
+
 	if path == "" {
 		location := fmt.Sprintf("/api/notebooks/%s/proxy/tree", id)
 		if r.URL.RawQuery != "" {
@@ -60,7 +65,7 @@ func (h *Handler) proxyNotebookRequest(w http.ResponseWriter, r *http.Request, i
 	proxy := &httputil.ReverseProxy{
 		Rewrite: func(req *httputil.ProxyRequest) {
 			req.SetURL(upstream)
-			req.Out.URL.Path = "/" + strings.TrimPrefix(path, "/")
+			req.Out.URL.Path = notebookProxyBasePath(id) + "/" + strings.TrimPrefix(path, "/")
 			req.Out.URL.RawPath = req.Out.URL.Path
 			req.Out.URL.RawQuery = req.In.URL.RawQuery
 			req.SetXForwarded()
@@ -109,15 +114,26 @@ func rewriteNotebookLocation(id servertypes.NotebookID, location string, upstrea
 		return ""
 	}
 
-	basePath := fmt.Sprintf("/api/notebooks/%s/proxy", id)
-	rewritten := basePath + parsed.Path
+	basePath := notebookProxyBasePath(id)
+	if strings.HasPrefix(parsed.Path, basePath) {
+		return notebookLocationWithSuffix(parsed.Path, parsed)
+	}
+
+	return notebookLocationWithSuffix(basePath+parsed.Path, parsed)
+}
+
+func notebookProxyBasePath(id servertypes.NotebookID) string {
+	return fmt.Sprintf("/api/notebooks/%s/proxy", id)
+}
+
+func notebookLocationWithSuffix(path string, parsed *url.URL) string {
+	rewritten := path
 	if parsed.RawQuery != "" {
 		rewritten += "?" + parsed.RawQuery
 	}
 	if parsed.Fragment != "" {
 		rewritten += "#" + parsed.Fragment
 	}
-
 	return rewritten
 }
 

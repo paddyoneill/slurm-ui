@@ -89,6 +89,35 @@ func validateCreateNotebookRequest(req *servertypes.CreateNotebookRequest) []ser
 	return fields
 }
 
+func decodeRegisterNotebookRequest(r *http.Request) (servertypes.RegisterNotebookRequest, *servertypes.ValidationError) {
+	var req servertypes.RegisterNotebookRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		return servertypes.RegisterNotebookRequest{}, validationError("Request faiiled validation", validationField("", "Invalid JSON request body"))
+	}
+
+	issues := validateRegisterNotebookRequest(&req)
+	if len(issues) > 0 {
+		return servertypes.RegisterNotebookRequest{}, validationError("Request failed validation", issues...)
+	}
+
+	return req, nil
+}
+
+func validateRegisterNotebookRequest(req *servertypes.RegisterNotebookRequest) []servertypes.ValidationIssue {
+	fields := make([]servertypes.ValidationIssue, 0)
+
+	req.RegistrationToken = strings.TrimSpace(req.RegistrationToken)
+	if req.RegistrationToken == "" {
+		fields = append(fields, validationField("registrationToken", "Registration token is required"))
+	}
+
+	if req.Port < 1 || req.Port > 65535 {
+		fields = append(fields, validationField("port", "Port must be between 1 and 65535"))
+	}
+
+	return fields
+}
+
 func validateLaunchConfig(req *servertypes.LaunchConfig) []servertypes.ValidationIssue {
 	fields := make([]servertypes.ValidationIssue, 0)
 
