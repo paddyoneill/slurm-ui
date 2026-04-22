@@ -1,2 +1,87 @@
-@import 'tailwindcss';
-@plugin '@tailwindcss/forms';
+:root {
+	--font-sans: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+	--font-mono: 'SFMono-Regular', 'Consolas', 'Menlo', monospace;
+
+	--colour-bg: #f3f4f6;
+	--colour-surface: #ffffff;
+	--colour-surface-muted: #f8fafc;
+	--colour-border: #e5e7eb;
+	--colour-text: #111827;
+	--colour-text-muted: #6b7280;
+	--colour-primary: #0f766e;
+	--colour-primary-soft: #ccfbf1;
+	--colour-primary-strong: #115e59;
+
+	--shadow-sm: 0 1px 2px rgba(0 0 0 / 0.05);
+	--shadow-md: 0 18px 40px rgba(15 23 42 / 0.08);
+
+	--radius-sm: 0.375rem;
+	--radium-md: 0.75rem;
+	--radius-lg: 1rem;
+
+	--space-1: 0.25rem;
+	--space-2: 0.5rem;
+	--space-3: 0.75rem;
+	--space-4: 1rem;
+	--space-5: 1.25rem;
+	--space-6: 1.5rem;
+	--space-8: 2rem;
+
+	--transistion-fast: 120ms ease;
+}
+
+html {
+	font-size: 16px;
+	line-height: 1.5;
+	-webkit-text-size-adjust: 100%;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	min-height: 100%;
+	background: var(--colour-bg);
+	color: var(--colour-text);
+	font-family: var(--font-sans);
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+body {
+	min-height: 100vh;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+img,
+picture,
+svg,
+canvas {
+	display: block;
+	max-width: 100%;
+}
+
+input,
+textarea,
+button,
+select {
+	font: inherit;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+code,
+pre,
+kbd,
+samp {
+	font-family: var(--font-mono);
+}
