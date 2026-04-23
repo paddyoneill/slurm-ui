@@ -6,13 +6,13 @@
 	let {
 		title,
 		description,
-		backRef,
+		backHref,
 		backLabel,
 		children
 	}: {
 		title: string;
 		description: string;
-		backRef: AppHref;
+		backHref: AppHref;
 		backLabel: string;
 		children: Snippet;
 	} = $props();
@@ -22,7 +22,7 @@
 	<PageIntro
 		{title}
 		{description}
-		actionHref={backRef}
+		actionHref={backHref}
 		actionLabel={backLabel}
 		actionVariant="secondary"
 	/>

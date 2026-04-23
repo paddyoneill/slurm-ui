@@ -33,7 +33,7 @@
 <style>
 	.intro {
 		display: flex;
-		align-content: flex-start;
+		align-items: flex-start;
 		justify-content: space-between;
 		gap: var(--space-4);
 		padding: var(--space-6);
@@ -68,23 +68,23 @@
 		align-items: center;
 		justify-content: center;
 		padding: 0.8rem 1.15rem;
-		border-radius: var(--border-md);
+		border-radius: var(--radius-md);
 		border: 1px solid transparent;
 		font-weight: 700;
 		white-space: nowrap;
 		transition:
-			backgroud-color var(--transition-fast),
+			background-color var(--transition-fast),
 			color var(--transition-fast),
 			border-color var(--transition-fast);
 	}
 
 	.action.primary {
-		background: var(--colour-bg);
+		background: var(--colour-primary);
 		color: #fff;
 	}
 
 	.action.primary:hover {
-		background: #115e59;
+		background: var(--colour-primary-strong);
 	}
 
 	.action.secondary {

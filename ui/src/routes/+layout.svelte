@@ -64,7 +64,7 @@
 		grid-template-columns: 17rem 1fr;
 		min-height: 100vh;
 		background:
-			radial-gradient(circle at top left, rgb(15 118 110 / 0.08), transparent 28%), var(--color-bg);
+			radial-gradient(circle at top left, rgb(15 118 110 / 0.08), transparent 28%), var(--colour-bg);
 	}
 
 	.app-sidebar {
@@ -162,21 +162,22 @@
 
 	.utility-chip,
 	.utility-meta {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.45rem 0.9rem;
 		border: 1px solid var(--colour-border);
 		border-radius: 999px;
-		background: rgb(255 255 255 /0.78);
+		background: rgb(255 255 255 / 0.78);
 		box-shadow: var(--shadow-sm);
 	}
 
 	.utility-chip {
-		padding: 0.45rem 0.85rem;
 		color: var(--colour-primary);
 		font-size: 0.85rem;
 		font-weight: 700;
 	}
 
-	.utility-chip {
-		padding: 0.45rem 0.9rem;
+	.utility-meta {
 		color: var(--colour-text-muted);
 		font-size: 0.9rem;
 		font-weight: 600;

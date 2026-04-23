@@ -4,6 +4,7 @@
 	import * as v from 'valibot';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
+	import CreatePage from '$lib/components/CreatePage.svelte';
 
 	let name = $state('');
 	let partition = $state('');
@@ -63,15 +64,12 @@
 	}
 </script>
 
-<section class="page-copy">
-	<div>
-		<h2>Create Notebook</h2>
-		<p>Submit a new Jupyter notebook server</p>
-	</div>
-	<a href={resolve('/notebooks')} class="page-link">Back to Notebooks</a>
-</section>
-
-<div class="form-shell">
+<CreatePage
+	title="Create Notebook"
+	description="Launch a new Juputer notebook server"
+	backHref="/notebooks"
+	backLabel="Back to Notebooks"
+>
 	<JobForm
 		bind:name
 		bind:partition
@@ -93,46 +91,9 @@
 			</label>
 		</div>
 	</JobForm>
-</div>
+</CreatePage>
 
 <style>
-	.page-copy {
-		display: flex;
-		align-items: flex-start;
-		justify-content: space-between;
-		gap: var(--space-4);
-		margin-bottom: var(--space-6);
-	}
-
-	h2 {
-		margin: 0;
-		font-size: 1.75rem;
-		letter-spacing: -0.03em;
-	}
-
-	p {
-		margin: var(--space-2) 0 0;
-		color: var(--colour-text-muted);
-	}
-
-	.page-link {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		min-height: 2.75rem;
-		padding: 0 1rem;
-		border: 1px solid var(--colour-border);
-		border-radius: var(--border-md);
-		background: var(--colour-surface);
-		font-weight: 600;
-		box-shadow: var(--shadow-sm);
-	}
-
-	.form-shell {
-		display: flex;
-		align-items: flex-start;
-	}
-
 	.field-label {
 		display: block;
 		font-size: 0.875rem;
@@ -153,13 +114,7 @@
 	.field-error {
 		display: block;
 		margin-top: var(--space-1);
-		color: #dc2626;
-		font-width: 0.875rem;
-	}
-
-	@media (max-width: 760px) {
-		.page-copy {
-			flex-direction: column;
-		}
+		color: var(--colour-danger);
+		font-size: 0.875rem;
 	}
 </style>

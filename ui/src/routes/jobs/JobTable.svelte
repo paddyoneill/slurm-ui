@@ -75,7 +75,7 @@
 
 <style>
 	.table-shell {
-		border: 1px solid var(--color-border);
+		border: 1px solid var(--colour-border);
 		border-radius: var(--radius-lg);
 		background: rgb(255 255 255 / 0.94);
 		box-shadow: var(--shadow-md);
@@ -95,14 +95,14 @@
 	th,
 	td {
 		padding: 1rem 1.1rem;
-		border-top: 1px solid var(--color-border);
+		border-top: 1px solid var(--colour-border);
 		text-align: left;
 	}
 
 	thead th {
 		border-top: 0;
-		background: var(--color-surface-muted);
-		color: var(--color-text-muted);
+		background: var(--colour-surface-muted);
+		color: var(--colour-text-muted);
 		font-size: 0.82rem;
 		font-weight: 800;
 		letter-spacing: 0.04em;
@@ -119,7 +119,7 @@
 
 	.empty {
 		padding: 2.5rem 1rem;
-		color: var(--color-text-muted);
+		color: var(--colour-text-muted);
 		text-align: center;
 	}
 
@@ -129,7 +129,7 @@
 	}
 
 	.age {
-		color: var(--color-text-muted);
+		color: var(--colour-text-muted);
 	}
 
 	.action-cell {
@@ -142,7 +142,7 @@
 		border: 0;
 		border-radius: var(--radius-md);
 		background: rgb(201 66 66 / 0.12);
-		color: var(--color-danger);
+		color: var(--colour-danger);
 		font-weight: 700;
 	}
 

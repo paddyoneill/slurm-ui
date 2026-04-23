@@ -173,9 +173,9 @@
 	.field-input {
 		width: 100%;
 		padding: 0.8rem 0.95rem;
-		border: 1px solid var(--color-border);
+		border: 1px solid var(--colour-border);
 		border-radius: var(--radius-md);
-		background: var(--color-surface);
+		background: var(--colour-surface);
 		box-shadow: var(--shadow-sm);
 		transition:
 			border-color var(--transition-fast),
@@ -183,23 +183,23 @@
 	}
 
 	.field-input:focus {
-		border-color: var(--color-primary);
+		border-color: var(--colour-primary);
 		outline: none;
 		box-shadow: 0 0 0 3px rgb(15 118 110 / 0.14);
 	}
 
 	.field-error {
 		margin: 0;
-		color: var(--color-danger);
+		color: var(--colour-danger);
 		font-size: 0.92rem;
 	}
 
 	.env-fieldset {
 		margin: 0;
 		padding: var(--space-4);
-		border: 1px solid var(--color-border);
+		border: 1px solid var(--colour-border);
 		border-radius: var(--radius-md);
-		background: var(--color-surface-muted);
+		background: var(--colour-surface-muted);
 	}
 
 	.env-list {
@@ -237,7 +237,7 @@
 	.env-add {
 		justify-self: start;
 		background: transparent;
-		color: var(--color-primary);
+		color: var(--colour-primary);
 	}
 
 	.env-add:hover {
@@ -246,7 +246,7 @@
 
 	.env-remove {
 		background: rgb(201 66 66 / 0.1);
-		color: var(--color-danger);
+		color: var(--colour-danger);
 	}
 
 	.env-remove:hover {
@@ -261,7 +261,7 @@
 	.submit-button {
 		min-width: 11rem;
 		padding: 0.9rem 1.25rem;
-		background: var(--color-success);
+		background: var(--colour-success);
 		color: #fff;
 	}
 
@@ -272,5 +272,4 @@
 	.submit-button:disabled {
 		opacity: 0.65;
 	}
-
 </style>
