@@ -16,96 +16,171 @@
 		const response = await fetch(`/api/notebooks/${id}`, { method: 'DELETE' });
 
 		if (!response.ok && response.status !== 204) {
-			await response.json().catch(() => null);
-			deletingIds = new Set([...deletingIds].filter((i) => i !== id));
+			deletingIds = new Set([...deletingIds].filter((item) => item !== id));
 		}
 	}
 </script>
 
-<div
-	class="w-full max-w-3xl overflow-hidden overflow-x-auto rounded-lg border border-gray-200 shadow-sm"
->
-	<div class="h-full min-w-160 overflow-y-auto">
-		<table class="w-full">
-			<thead class="sticky top-0 z-50 bg-gray-100 text-left text-sm font-semibold text-gray-700">
+<section class="table-shell">
+	<div class="table-scroll">
+		<table>
+			<thead>
 				<tr>
-					<th class="px-4 py-3">ID</th>
-					<th class="px-4 py-3">Job State</th>
-					<th class="px-4 py-3"></th>
-					<th class="px-4 py-3"></th>
+					<th>ID</th>
+					<th>State</th>
+					<th>Target</th>
+					<th><span class="sr-only">Connect</span></th>
+					<th><span class="sr-only">Delete</span></th>
 				</tr>
 			</thead>
-			<tbody class="whitespace-nowrap">
+			<tbody>
 				{#if loading}
-					<tr><td colspan="5" class="text-center text-2xl font-medium">Loading notebooks...</td></tr
-					>
+					<tr>
+						<td class="empty" colspan="5">Loading notebooks...</td>
+					</tr>
+				{:else if notebooks.length === 0}
+					<tr>
+						<td class="empty" colspan="5">No notebooks launched yet.</td>
+					</tr>
 				{:else}
 					{#each notebooks as { id, state, host, port, token }, i (id)}
-						<tr class="border-t border-gray-100 {i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}">
-							<td class="px-4 py-3">{id}</td>
-							<td class="px-4 py-3">{state}</td>
-							<td class="px-4 py-3"
-								><button
-									class="h-10 w-24 rounded bg-teal-600 px-4 py-2 font-semibold text-white hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
+						<tr class:alt={i % 2 === 1} class:muted={deletingIds.has(id)}>
+							<td class="mono">{id}</td>
+							<td>{state}</td>
+							<td>{host && port ? `${host}:${port}` : 'Waiting for registration'}</td>
+							<td class="action-cell">
+								<button
+									class="primary-button"
 									disabled={!host || !port}
-									onclick={() =>
-										window.open(`/api/notebooks/${id}/proxy/?token=${token}`, '_blank')}
-									>{#if !host}
-										<svg class="mx-auto h-4 w-4 animate-spin" viewBox="0 0 24 24">
-											<circle
-												class="opacity-25"
-												cx="12"
-												cy="12"
-												r="10"
-												stroke="currentColor"
-												stroke-width="4"
-												fill="none"
-											/>
-											<path
-												class="opacity-75"
-												fill="currentColor"
-												d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-											/>
-										</svg>
-									{:else}
-										Connect
-									{/if}</button
-								></td
-							>
-
-							<td class="px-4 py-3"
-								><button
-									class="h-10 w-20 rounded bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700"
+									onclick={() => {
+										window.open(
+											`/api/notebooks/${id}/proxy/tree?token=${encodeURIComponent(token)}`,
+											'_blank',
+											'noopener,noreferrer'
+										);
+									}}
+								>
+									{host && port ? 'Connect' : 'Starting...'}
+								</button>
+							</td>
+							<td class="action-cell">
+								<button
+									class="danger-button"
 									disabled={deletingIds.has(id)}
 									onclick={() => {
-										deleteNotebook(id);
+										void deleteNotebook(id);
 									}}
-									>{#if deletingIds.has(id)}
-										<svg class="mx-auto h-4 w-4 animate-spin" viewBox="0 0 24 24">
-											<circle
-												class="opacity-25"
-												cx="12"
-												cy="12"
-												r="10"
-												stroke="currentColor"
-												stroke-width="4"
-												fill="none"
-											/>
-											<path
-												class="opacity-75"
-												fill="currentColor"
-												d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-											/>
-										</svg>
-									{:else}
-										Delete
-									{/if}</button
-								></td
-							>
+								>
+									{deletingIds.has(id) ? 'Deleting...' : 'Delete'}
+								</button>
+							</td>
 						</tr>
 					{/each}
 				{/if}
 			</tbody>
 		</table>
 	</div>
-</div>
+</section>
+
+<style>
+	.table-shell {
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		background: rgb(255 255 255 / 0.94);
+		box-shadow: var(--shadow-md);
+		overflow: hidden;
+	}
+
+	.table-scroll {
+		overflow-x: auto;
+	}
+
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		min-width: 56rem;
+	}
+
+	th,
+	td {
+		padding: 1rem 1.1rem;
+		border-top: 1px solid var(--color-border);
+		text-align: left;
+	}
+
+	thead th {
+		border-top: 0;
+		background: var(--color-surface-muted);
+		color: var(--color-text-muted);
+		font-size: 0.82rem;
+		font-weight: 800;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	tbody tr.alt {
+		background: rgb(248 250 252 / 0.7);
+	}
+
+	tbody tr.muted {
+		opacity: 0.6;
+	}
+
+	.empty {
+		padding: 2.5rem 1rem;
+		color: var(--color-text-muted);
+		text-align: center;
+	}
+
+	.mono {
+		font-family: var(--font-mono);
+		font-size: 0.9rem;
+	}
+
+	.action-cell {
+		width: 1%;
+		white-space: nowrap;
+	}
+
+	.primary-button,
+	.danger-button {
+		padding: 0.72rem 0.95rem;
+		border: 0;
+		border-radius: var(--radius-md);
+		font-weight: 700;
+	}
+
+	.primary-button {
+		background: rgb(15 118 110 / 0.12);
+		color: var(--color-primary);
+	}
+
+	.primary-button:hover:not(:disabled) {
+		background: rgb(15 118 110 / 0.2);
+	}
+
+	.danger-button {
+		background: rgb(201 66 66 / 0.12);
+		color: var(--color-danger);
+	}
+
+	.danger-button:hover:not(:disabled) {
+		background: rgb(201 66 66 / 0.2);
+	}
+
+	button:disabled {
+		opacity: 0.6;
+	}
+
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+</style>

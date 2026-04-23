@@ -6,7 +6,7 @@
 	import { resolve } from '$app/paths';
 
 	let name = $state('');
-	let parition = $state('');
+	let partition = $state('');
 	let currentWorkingDirectory = $state('/home');
 	let baseEnv = $state('/home/hpcadmin/paddy/base-notebook');
 	let cpusPerTask = $state(1);
@@ -22,7 +22,7 @@
 
 		const input = {
 			name,
-			parition: parition || undefined,
+			parition: partition || undefined,
 			currentWorkingDirectory,
 			baseEnv,
 			environment: envVars
@@ -74,7 +74,7 @@
 <div class="form-shell">
 	<JobForm
 		bind:name
-		bind:parition
+		bind:partition
 		bind:currentWorkingDirectory
 		bind:cpusPerTask
 		bind:tasksPerNode

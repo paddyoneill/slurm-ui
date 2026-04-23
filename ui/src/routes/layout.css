@@ -27,7 +27,8 @@
 	--space-6: 1.5rem;
 	--space-8: 2rem;
 
-	--transistion-fast: 120ms ease;
+	--transistion-fast: 140ms ease;
+	--transistion-fast: 180ms ease;
 }
 
 html {

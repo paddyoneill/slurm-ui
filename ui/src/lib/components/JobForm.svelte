@@ -3,7 +3,7 @@
 
 	let {
 		name = $bindable(),
-		parition = $bindable(),
+		partition = $bindable(),
 		currentWorkingDirectory = $bindable(),
 		cpusPerTask = $bindable(),
 		tasksPerNode = $bindable(),
@@ -16,7 +16,7 @@
 		children
 	}: {
 		name: string;
-		parition: string;
+		partition: string;
 		currentWorkingDirectory: string;
 		cpusPerTask: number;
 		tasksPerNode: number;
@@ -24,146 +24,253 @@
 		timeLimit: number;
 		envVars: { key: string; value: string }[];
 		errors: Record<string, string>;
-		onSubmit: () => void;
+		onSubmit: () => Promise<void> | void;
 		submitting: boolean;
 		children?: Snippet;
 	} = $props();
 </script>
 
 <form
-	class="relative w-full max-w-lg p-6"
-	onsubmit={(e) => {
-		e.preventDefault();
+	class="form"
+	onsubmit={(event) => {
+		event.preventDefault();
 		onSubmit();
 	}}
 >
-	<div class="space-y-4">
-		<div>
-			<label class="block text-sm font-medium text-gray-700"
-				>Name
-				<input
-					type="text"
-					bind:value={name}
-					class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
-				/>
-				{#if errors.name}<span class="text-sm text-red-500">{errors.name}</span>{/if}
-			</label>
+	<div class="fields">
+		<div class="field">
+			<label class="field-label" for="name">Name</label>
+			<input id="name" class="field-input" type="text" bind:value={name} />
+			{#if errors.name}<p class="field-error">{errors.name}</p>{/if}
 		</div>
-		<div>
-			<label class="block text-sm font-medium text-gray-700"
-				>Working Directory
-				<input
-					type="text"
-					bind:value={currentWorkingDirectory}
-					class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
-				/>
-				{#if errors.currentWorkingDirectory}<span class="text-sm text-red-500"
-						>{errors.currentWorkingDirectory}</span
-					>{/if}
-			</label>
+
+		<div class="field">
+			<label class="field-label" for="currentWorkingDirectory">Working Directory</label>
+			<input
+				id="currentWorkingDirectory"
+				class="field-input"
+				type="text"
+				bind:value={currentWorkingDirectory}
+			/>
+			{#if errors.currentWorkingDirectory}
+				<p class="field-error">{errors.currentWorkingDirectory}</p>
+			{/if}
 		</div>
-		<div>
-			<label class="block text-sm font-medium text-gray-700"
-				>Partition
-				<input
-					type="text"
-					bind:value={parition}
-					class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
-				/>
-				{#if errors.parition}<span class="text-sm text-red-500">{errors.parition}</span>{/if}
-			</label>
+
+		<div class="field">
+			<label class="field-label" for="partition">Partition</label>
+			<input id="partition" class="field-input" type="text" bind:value={partition} />
+			{#if errors.partition}<p class="field-error">{errors.partition}</p>{/if}
 		</div>
-		<div class="grid grid-cols-2 gap-4">
-			<div>
-				<label class="block text-sm font-medium text-gray-700"
-					>Tasks Per Node
-					<input
-						type="number"
-						bind:value={tasksPerNode}
-						class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
-					/>
-					{#if errors.cpusPerTask}<span class="text-sm text-red-500">{errors.cpusPerTask}</span
-						>{/if}
-				</label>
+
+		<div class="field-grid">
+			<div class="field">
+				<label class="field-label" for="tasksPerNode">Tasks Per Node</label>
+				<input id="tasksPerNode" class="field-input" type="number" bind:value={tasksPerNode} />
+				{#if errors.tasksPerNode}<p class="field-error">{errors.tasksPerNode}</p>{/if}
 			</div>
-			<div>
-				<label class="block text-sm font-medium text-gray-700"
-					>CPUs Per Task
-					<input
-						type="number"
-						bind:value={cpusPerTask}
-						class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
-					/>
-					{#if errors.cpusPerTask}<span class="text-sm text-red-500">{errors.cpusPerTask}</span
-						>{/if}
-				</label>
+
+			<div class="field">
+				<label class="field-label" for="cpusPerTask">CPUs Per Task</label>
+				<input id="cpusPerTask" class="field-input" type="number" bind:value={cpusPerTask} />
+				{#if errors.cpusPerTask}<p class="field-error">{errors.cpusPerTask}</p>{/if}
 			</div>
-			<div>
-				<label class="block text-sm font-medium text-gray-700"
-					>Memory Per Node
-					<input
-						type="number"
-						bind:value={memoryPerNode}
-						class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
-					/>
-					{#if errors.memoryPerNode}<span class="text-sm text-red-500">{errors.memoryPerNode}</span
-						>{/if}
-				</label>
+
+			<div class="field">
+				<label class="field-label" for="memoryPerNode">Memory Per Node</label>
+				<input id="memoryPerNode" class="field-input" type="number" bind:value={memoryPerNode} />
+				{#if errors.memoryPerNode}<p class="field-error">{errors.memoryPerNode}</p>{/if}
 			</div>
-			<div>
-				<label class="block text-sm font-medium text-gray-700"
-					>Time Limit
-					<input
-						type="number"
-						bind:value={timeLimit}
-						class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
-					/>
-					{#if errors.timeLimit}<span class="text-sm text-red-500">{errors.timeLimit}</span>{/if}
-				</label>
+
+			<div class="field">
+				<label class="field-label" for="timeLimit">Time Limit</label>
+				<input id="timeLimit" class="field-input" type="number" bind:value={timeLimit} />
+				{#if errors.timeLimit}<p class="field-error">{errors.timeLimit}</p>{/if}
 			</div>
 		</div>
 
-		<fieldset>
-			<legend class="block text-sm font-medium text-gray-700">Environment Variables</legend>
-			{#each envVars as env, i (i)}
-				<div class="mt-1 flex items-center gap-2">
-					<input
-						class="block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
-						type="text"
-						bind:value={env.key}
-						placeholder="KEY"
-					/>
-					<input
-						class="block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
-						type="text"
-						bind:value={env.value}
-						placeholder="VALUE"
-					/>
-					<button
-						type="button"
-						onclick={() => (envVars = envVars.filter((_, j) => j != i))}
-						class="self-stretch rounded-md bg-red-500 px-3 text-sm text-white hover:bg-red-700"
-						>Remove</button
-					>
-				</div>
-			{/each}
+		<fieldset class="env-fieldset">
+			<legend class="field-label">Environment Variables</legend>
+			<div class="env-list">
+				{#each envVars as env, i (i)}
+					<div class="env-row">
+						<input
+							class="field-input env-input"
+							type="text"
+							bind:value={env.key}
+							placeholder="KEY"
+						/>
+						<input
+							class="field-input env-input"
+							type="text"
+							bind:value={env.value}
+							placeholder="VALUE"
+						/>
+						<button
+							class="env-remove"
+							type="button"
+							onclick={() => (envVars = envVars.filter((_, j) => j !== i))}
+						>
+							Remove
+						</button>
+					</div>
+				{/each}
+			</div>
+
 			{#if errors.environment}
-				<span class="text-sm text-red-500">{errors.environment}</span>
+				<p class="field-error">{errors.environment}</p>
 			{/if}
+
 			<button
+				class="env-add"
 				type="button"
 				onclick={() => (envVars = [...envVars, { key: '', value: '' }])}
-				class="text-sm text-teal-600 hover:text-teal-700">+ Add Variable</button
 			>
+				Add variable
+			</button>
 		</fieldset>
+
 		{@render children?.()}
 	</div>
-	<div class="flex gap-3 pt-4">
-		<button
-			disabled={submitting}
-			type="submit"
-			class="w-full rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700"
-			>{submitting ? 'Submitting...' : 'Submit'}
+
+	<div class="actions">
+		<button class="submit-button" disabled={submitting} type="submit">
+			{submitting ? 'Submitting...' : 'Submit'}
 		</button>
 	</div>
 </form>
+
+<style>
+	.form {
+		display: grid;
+		gap: var(--space-5);
+		width: min(100%, 44rem);
+		padding: var(--space-5);
+	}
+
+	.fields {
+		display: grid;
+		gap: var(--space-5);
+	}
+
+	.field,
+	.env-fieldset {
+		display: grid;
+		gap: var(--space-2);
+	}
+
+	.field-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--space-4);
+	}
+
+	.field-label {
+		font-size: 0.95rem;
+		font-weight: 700;
+	}
+
+	.field-input {
+		width: 100%;
+		padding: 0.8rem 0.95rem;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		background: var(--color-surface);
+		box-shadow: var(--shadow-sm);
+		transition:
+			border-color var(--transition-fast),
+			box-shadow var(--transition-fast);
+	}
+
+	.field-input:focus {
+		border-color: var(--color-primary);
+		outline: none;
+		box-shadow: 0 0 0 3px rgb(15 118 110 / 0.14);
+	}
+
+	.field-error {
+		margin: 0;
+		color: var(--color-danger);
+		font-size: 0.92rem;
+	}
+
+	.env-fieldset {
+		margin: 0;
+		padding: var(--space-4);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		background: var(--color-surface-muted);
+	}
+
+	.env-list {
+		display: grid;
+		gap: var(--space-3);
+	}
+
+	.env-row {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+		gap: var(--space-3);
+		align-items: center;
+	}
+
+	.env-input {
+		min-width: 0;
+	}
+
+	.env-add,
+	.env-remove,
+	.submit-button {
+		border: 0;
+		border-radius: var(--radius-md);
+		font-weight: 700;
+		transition:
+			background-color var(--transition-fast),
+			opacity var(--transition-fast);
+	}
+
+	.env-add,
+	.env-remove {
+		padding: 0.72rem 0.95rem;
+	}
+
+	.env-add {
+		justify-self: start;
+		background: transparent;
+		color: var(--color-primary);
+	}
+
+	.env-add:hover {
+		background: rgb(15 118 110 / 0.08);
+	}
+
+	.env-remove {
+		background: rgb(201 66 66 / 0.1);
+		color: var(--color-danger);
+	}
+
+	.env-remove:hover {
+		background: rgb(201 66 66 / 0.18);
+	}
+
+	.actions {
+		display: flex;
+		justify-content: flex-start;
+	}
+
+	.submit-button {
+		min-width: 11rem;
+		padding: 0.9rem 1.25rem;
+		background: var(--color-success);
+		color: #fff;
+	}
+
+	.submit-button:hover:not(:disabled) {
+		background: #166534;
+	}
+
+	.submit-button:disabled {
+		opacity: 0.65;
+	}
+
+</style>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { ApiJob } from '$lib/api';
 	import { formatAge } from '$lib/date';
+
 	let {
 		jobs,
 		loading
@@ -16,81 +17,152 @@
 		const response = await fetch(`/api/jobs/${id}`, { method: 'DELETE' });
 
 		if (!response.ok && response.status !== 204) {
-			await response.json().catch(() => null);
-			deletingIds = new Set([...deletingIds].filter((i) => i !== id));
+			deletingIds = new Set([...deletingIds].filter((item) => item !== id));
 		}
 	}
 </script>
 
-<div
-	class="w-full max-w-3xl overflow-hidden overflow-x-auto rounded-lg border border-gray-200 shadow-sm"
->
-	<div class="h-full min-w-160 overflow-y-auto">
-		<table class="w-full">
-			<thead class="sticky top-0 z-50 bg-gray-100 text-left text-sm font-semibold text-gray-700">
+<section class="table-shell">
+	<div class="table-scroll">
+		<table>
+			<thead>
 				<tr>
-					<th class="px-4 py-3">ID</th>
-					<th class="px-4 py-3">Job ID</th>
-					<th class="px-4 py-3">State</th>
-					<th class="px-4 py-3">Age</th>
-					<th class="px-4 py-3"><span class="sr-only">Delete</span></th>
+					<th>ID</th>
+					<th>Slurm Job</th>
+					<th>State</th>
+					<th>Age</th>
+					<th><span class="sr-only">Delete</span></th>
 				</tr>
 			</thead>
-			<tbody class="whitespace-nowrap">
+			<tbody>
 				{#if loading}
-					<tr><td colspan="5" class="text-center text-2xl font-medium">Loading jobs...</td></tr>
+					<tr>
+						<td class="empty" colspan="5">Loading jobs...</td>
+					</tr>
+				{:else if jobs.length === 0}
+					<tr>
+						<td class="empty" colspan="5">No jobs submitted yet.</td>
+					</tr>
 				{:else}
 					{#each jobs as { id, state, slurmJobId, createdAt }, i (id)}
-						<tr
-							class="border-t border-gray-100 {i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
-								{deletingIds.has(id) ? 'pointer-events-none opacity-50' : ''}"
-						>
-							<td class="px-4 py-3">{id}</td>
-							<td class="px-4 py-3">{slurmJobId}</td>
-							<td class="px-4 py-3">{state}</td>
-							<td class="px-4 py-3">
-								<span class="group relative cursor-default">
+						<tr class:alt={i % 2 === 1} class:muted={deletingIds.has(id)}>
+							<td class="mono">{id}</td>
+							<td>{slurmJobId}</td>
+							<td>{state}</td>
+							<td>
+								<span class="age" title={new Date(createdAt).toLocaleString()}>
 									{formatAge(createdAt)}
-									<span
-										class="absolute bottom-full left-0 z-50 hidden rounded-md bg-gray-900 px-3 py-2 text-xs text-white shadow-lg group-hover:block"
-									>
-										{new Date(createdAt).toLocaleString()}
-									</span>
 								</span>
 							</td>
-							<td class="w-[20%] px-4 py-3"
-								><button
-									class="h-10 w-20 rounded bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700"
+							<td class="action-cell">
+								<button
+									class="danger-button"
 									disabled={deletingIds.has(id)}
 									onclick={() => {
-										deleteJob(id);
+										void deleteJob(id);
 									}}
-									>{#if deletingIds.has(id)}
-										<svg class="mx-auto h-4 w-4 animate-spin" viewBox="0 0 24 24">
-											<circle
-												class="opacity-25"
-												cx="12"
-												cy="12"
-												r="10"
-												stroke="currentColor"
-												stroke-width="4"
-												fill="none"
-											/>
-											<path
-												class="opacity-75"
-												fill="currentColor"
-												d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-											/>
-										</svg>
-									{:else}
-										Delete
-									{/if}</button
-								></td
-							>
+								>
+									{deletingIds.has(id) ? 'Deleting...' : 'Delete'}
+								</button>
+							</td>
 						</tr>
 					{/each}
 				{/if}
 			</tbody>
 		</table>
 	</div>
-</div>
+</section>
+
+<style>
+	.table-shell {
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		background: rgb(255 255 255 / 0.94);
+		box-shadow: var(--shadow-md);
+		overflow: hidden;
+	}
+
+	.table-scroll {
+		overflow-x: auto;
+	}
+
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		min-width: 52rem;
+	}
+
+	th,
+	td {
+		padding: 1rem 1.1rem;
+		border-top: 1px solid var(--color-border);
+		text-align: left;
+	}
+
+	thead th {
+		border-top: 0;
+		background: var(--color-surface-muted);
+		color: var(--color-text-muted);
+		font-size: 0.82rem;
+		font-weight: 800;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	tbody tr.alt {
+		background: rgb(248 250 252 / 0.7);
+	}
+
+	tbody tr.muted {
+		opacity: 0.6;
+	}
+
+	.empty {
+		padding: 2.5rem 1rem;
+		color: var(--color-text-muted);
+		text-align: center;
+	}
+
+	.mono {
+		font-family: var(--font-mono);
+		font-size: 0.9rem;
+	}
+
+	.age {
+		color: var(--color-text-muted);
+	}
+
+	.action-cell {
+		width: 1%;
+		white-space: nowrap;
+	}
+
+	.danger-button {
+		padding: 0.72rem 0.95rem;
+		border: 0;
+		border-radius: var(--radius-md);
+		background: rgb(201 66 66 / 0.12);
+		color: var(--color-danger);
+		font-weight: 700;
+	}
+
+	.danger-button:hover:not(:disabled) {
+		background: rgb(201 66 66 / 0.2);
+	}
+
+	.danger-button:disabled {
+		opacity: 0.7;
+	}
+
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+</style>

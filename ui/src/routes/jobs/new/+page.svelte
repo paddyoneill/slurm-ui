@@ -7,7 +7,7 @@
 
 	let name = $state('');
 	let script = $state('');
-	let parition = $state('');
+	let partition = $state('');
 	let currentWorkingDirectory = $state('/home');
 	let cpusPerTask = $state(1);
 	let tasksPerNode = $state(1);
@@ -23,7 +23,7 @@
 		const input = {
 			name,
 			script,
-			parition: parition || undefined,
+			parition: partition || undefined,
 			currentWorkingDirectory,
 			environment: envVars
 				.filter((e) => e.key.trim())
@@ -74,7 +74,7 @@
 <div class="form-shell">
 	<JobForm
 		bind:name
-		bind:parition
+		bind:partition
 		bind:currentWorkingDirectory
 		bind:cpusPerTask
 		bind:tasksPerNode
