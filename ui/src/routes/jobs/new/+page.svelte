@@ -1,10 +1,10 @@
 <script lang="ts">
+	import CreatePage from '$lib/components/CreatePage.svelte';
 	import JobForm from '$lib/components/JobForm.svelte';
 	import { createJobSchema } from '$lib/validation/job';
 	import * as v from 'valibot';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import CreatePage from '$lib/components/CreatePage.svelte';
 
 	let name = $state('');
 	let script = $state('');

@@ -1,10 +1,10 @@
 <script lang="ts">
+	import CreatePage from '$lib/components/CreatePage.svelte';
 	import JobForm from '$lib/components/JobForm.svelte';
 	import { createNotebookScheme } from '$lib/validation/notebook';
 	import * as v from 'valibot';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import CreatePage from '$lib/components/CreatePage.svelte';
 
 	let name = $state('');
 	let partition = $state('');
@@ -23,7 +23,7 @@
 
 		const input = {
 			name,
-			parition: partition || undefined,
+			partition: partition || undefined,
 			currentWorkingDirectory,
 			baseEnv,
 			environment: envVars
