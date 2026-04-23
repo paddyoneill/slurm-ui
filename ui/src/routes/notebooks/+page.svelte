@@ -37,7 +37,7 @@
 <div class="page">
 	<PageIntro
 		title="Notebooks"
-		description="Browse active sessions and start a new notebook server from the create page"
+		description="Browse active sessions and start a new notebook server."
 		actionHref="/notebooks/new"
 		actionLabel="Create notebook"
 	/>

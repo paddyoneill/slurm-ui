@@ -28,7 +28,7 @@
 </svelte:head>
 
 <div class="app-shell">
-	<aside class="app-sidebar">
+	<div class="utility-bar">
 		<a class="brand" href={resolve('/')}>
 			<div class="brand-mark">S</div>
 			<div class="brand-copy">
@@ -36,7 +36,12 @@
 				<span class="brand-subtitle">Jobs and notebooks</span>
 			</div>
 		</a>
-
+		<div class="utility-actions">
+			<div class="utility-chip">Internal</div>
+			<div class="utility-meta">Account</div>
+		</div>
+	</div>
+	<aside class="app-sidebar">
 		<nav class="nav" aria-label="Primary">
 			{#each navItems as item, index (index)}
 				<a href={resolve(item.href)} class:active={isActive(item.href)} class="nav-link">
@@ -45,13 +50,7 @@
 			{/each}
 		</nav>
 	</aside>
-
 	<div class="content-shell">
-		<div class="utility-bar">
-			<div class="utility-chip">Internal</div>
-			<div class="utility-meta">Account</div>
-		</div>
-
 		<main class="content">
 			{@render children()}
 		</main>
@@ -62,15 +61,29 @@
 	.app-shell {
 		display: grid;
 		grid-template-columns: 17rem 1fr;
+		grid-template-rows: auto 1fr;
 		min-height: 100vh;
 		background:
 			radial-gradient(circle at top left, rgb(15 118 110 / 0.08), transparent 28%), var(--colour-bg);
 	}
 
+	.utility-bar {
+		grid-column: 1 / -1;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-3);
+		padding: var(--space-2) var(--space-8);
+		background: rgb(255 255 255 / 0.92);
+		border-bottom: 1px solid var(--colour-border);
+		box-shadow: var(--shadow-sm);
+		backdrop-filter: blur(18px);
+	}
+
 	.app-sidebar {
+		grid-row: 2;
 		display: flex;
 		flex-direction: column;
-		gap: var(--space-8);
 		padding: var(--space-6);
 		background: rgb(255 255 255 / 0.92);
 		border-right: 1px solid var(--colour-border);
@@ -117,6 +130,13 @@
 		color: var(--colour-text-muted);
 	}
 
+	.utility-actions {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: var(--space-3);
+	}
+
 	.nav {
 		display: grid;
 		gap: var(--space-2);
@@ -147,17 +167,11 @@
 	}
 
 	.content-shell {
+		grid-row: 2;
 		display: flex;
 		flex-direction: column;
 		min-width: 0;
-	}
-
-	.utility-bar {
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		gap: var(--space-3);
-		padding: var(--space-5) var(--space-8);
+		padding-top: var(--space-5);
 	}
 
 	.utility-chip,
