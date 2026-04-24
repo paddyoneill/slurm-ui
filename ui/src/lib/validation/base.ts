@@ -2,7 +2,7 @@ import * as v from 'valibot';
 
 export const baseJobFields = {
 	name: v.pipe(v.string(), v.trim(), v.minLength(1, 'Job name is required')),
-	parition: v.optional(v.pipe(v.string(), v.minLength(1, 'Parition cannot be empty'))),
+	partition: v.optional(v.pipe(v.string(), v.minLength(1, 'Partition cannot be empty'))),
 	currentWorkingDirectory: v.pipe(
 		v.string(),
 		v.trim(),
