@@ -36,11 +36,13 @@
 				<span class="brand-subtitle">Jobs and notebooks</span>
 			</div>
 		</a>
+
 		<div class="utility-actions">
 			<div class="utility-chip">Internal</div>
 			<div class="utility-meta">Account</div>
 		</div>
 	</div>
+
 	<aside class="app-sidebar">
 		<nav class="nav" aria-label="Primary">
 			{#each navItems as item, index (index)}
@@ -50,6 +52,7 @@
 			{/each}
 		</nav>
 	</aside>
+
 	<div class="content-shell">
 		<main class="content">
 			{@render children()}
@@ -64,7 +67,9 @@
 		grid-template-rows: auto 1fr;
 		min-height: 100vh;
 		background:
-			radial-gradient(circle at top left, rgb(15 118 110 / 0.08), transparent 28%), var(--colour-bg);
+			linear-gradient(180deg, rgb(255 255 255 / 0.55), transparent 12rem),
+			radial-gradient(circle at top right, rgb(var(--colour-primary-rgb) / 0.1), transparent 24%),
+			var(--colour-bg);
 	}
 
 	.utility-bar {
@@ -73,11 +78,10 @@
 		align-items: center;
 		justify-content: space-between;
 		gap: var(--space-3);
-		padding: var(--space-2) var(--space-8);
-		background: rgb(255 255 255 / 0.92);
+		padding: 0.75rem var(--space-8);
+		background: var(--colour-surface);
 		border-bottom: 1px solid var(--colour-border);
 		box-shadow: var(--shadow-sm);
-		backdrop-filter: blur(18px);
 	}
 
 	.app-sidebar {
@@ -85,10 +89,8 @@
 		display: flex;
 		flex-direction: column;
 		padding: var(--space-6);
-		background: rgb(255 255 255 / 0.92);
+		background: linear-gradient(180deg, var(--colour-surface), var(--colour-surface-muted));
 		border-right: 1px solid var(--colour-border);
-		box-shadow: var(--shadow-sm);
-		backdrop-filter: blur(18px);
 	}
 
 	.brand {
@@ -103,11 +105,13 @@
 		width: 2.75rem;
 		height: 2.75rem;
 		border-radius: var(--radius-md);
-		background: linear-gradient(135deg, #0f766e, #14532d);
+		background: linear-gradient(135deg, var(--colour-brand-start), var(--colour-brand-end));
 		color: #fff;
 		font-size: 1.1rem;
 		font-weight: 700;
-		box-shadow: inset 0 0 0 1px rgb(15 118 120 / 0.08);
+		box-shadow:
+			inset 0 0 0 1px rgb(255 255 255 / 0.28),
+			0 10px 24px rgb(var(--colour-primary-rgb) / 0.22);
 	}
 
 	.brand-copy {
@@ -139,31 +143,48 @@
 
 	.nav {
 		display: grid;
-		gap: var(--space-2);
+		gap: 0.35rem;
 	}
 
 	.nav-link {
+		position: relative;
 		display: flex;
 		align-items: center;
-		padding: 0.85rem 1rem;
+		padding: 0.8rem 1rem 0.8rem 1.25rem;
+		border: 1px solid transparent;
 		border-radius: var(--radius-md);
+		background: transparent;
 		color: var(--colour-text-muted);
 		font-weight: 600;
 		transition:
 			background-color var(--transition-fast),
 			border-color var(--transition-fast),
-			transform var(--transition-fast);
+			color var(--transition-fast),
+			box-shadow var(--transition-fast);
 	}
 
 	.nav-link:hover {
-		background: var(--colour-surface-muted);
+		border-color: var(--colour-border);
+		background: var(--colour-surface);
 		color: var(--colour-text);
-		transform: translateX(2px);
+		box-shadow: var(--shadow-sm);
 	}
 
 	.nav-link.active {
+		border-color: rgb(var(--colour-primary-rgb) / 0.22);
 		background: var(--colour-primary-soft);
-		color: var(--colour-primary);
+		color: var(--colour-primary-strong);
+		box-shadow: var(--shadow-sm);
+	}
+
+	.nav-link.active::before {
+		content: '';
+		position: absolute;
+		left: 0.5rem;
+		width: 0.3rem;
+		height: 1.2rem;
+		border-radius: 999px;
+		background: var(--colour-primary);
 	}
 
 	.content-shell {
@@ -181,12 +202,14 @@
 		padding: 0.45rem 0.9rem;
 		border: 1px solid var(--colour-border);
 		border-radius: 999px;
-		background: rgb(255 255 255 / 0.78);
+		background: var(--colour-surface);
 		box-shadow: var(--shadow-sm);
 	}
 
 	.utility-chip {
-		color: var(--colour-primary);
+		background-color: rgb(var(--colour-primary-rgb) / 0.18);
+		background: var(--colour-primary-soft);
+		color: var(--colour-primary-strong);
 		font-size: 0.85rem;
 		font-weight: 700;
 	}

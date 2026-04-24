@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { ApiNotebook } from '$lib/api';
+	import PageAction from '$lib/components/PageAction.svelte';
 	import NotebookTable from './NotebookTable.svelte';
 	import PageIntro from '$lib/components/PageIntro.svelte';
 
@@ -38,11 +39,11 @@
 	<PageIntro
 		title="Notebooks"
 		description="Browse active sessions and start a new notebook server."
-		actionHref="/notebooks/new"
-		actionLabel="Create notebook"
 	/>
 
 	<NotebookTable {notebooks} {loading} />
+
+	<PageAction href="/notebooks/new" label="Create notebook" />
 </div>
 
 <style>

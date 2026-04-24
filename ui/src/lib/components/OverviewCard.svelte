@@ -27,20 +27,32 @@
 <style>
 	.overview-card {
 		display: grid;
+		position: relative;
 		gap: var(--space-3);
 		padding: var(--space-6);
 		border: 1px solid var(--colour-border);
 		border-radius: var(--radius-lg);
-		background: rgb(255 255 255 / 0.95);
+		background: var(--colour-surface);
 		box-shadow: var(--shadow-md);
-		transition: border-color var(--transition-fast) box-shadow var(--transition-fast) transform
-			var(--transition-fast);
+		overflow: hidden;
+		transition:
+			border-color var(--transition-fast),
+			box-shadow var(--transition-fast),
+			transform var(--transition-fast);
+	}
+
+	.overview-card::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(135deg, rgb(var(--colour-primary-rgf) / 0.08), transparent 40%);
+		pointer-events: none;
 	}
 
 	.overview-card:hover {
-		border-color: rgb(15 118 110 / 0.25);
-		box-shadow: 0 24px 48px rgb(15 23 42 / 0.12);
-		transform: translateX(-2px);
+		border-color: rgb(var(--colour-primary-rgb) / 0.22);
+		box-shadow: 0 18px 36px rgb(17 24 39 / 0.1);
+		transform: translateY(-1px);
 	}
 
 	.card-label,
@@ -53,6 +65,14 @@
 
 	.card-label {
 		color: var(--colour-text-muted);
+	}
+
+	.card-label,
+	.card-value,
+	.card-copy,
+	.card-link {
+		position: relative;
+		z-index: 1;
 	}
 
 	.card-value {

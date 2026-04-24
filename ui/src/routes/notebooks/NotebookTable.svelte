@@ -86,7 +86,7 @@
 	.table-shell {
 		border: 1px solid var(--colour-border);
 		border-radius: var(--radius-lg);
-		background: rgb(255 255 255 / 0.94);
+		background: var(--colour-surface);
 		box-shadow: var(--shadow-md);
 		overflow: hidden;
 	}
@@ -119,7 +119,7 @@
 	}
 
 	tbody tr.alt {
-		background: rgb(248 250 252 / 0.7);
+		background: var(--colour-surface-muted);
 	}
 
 	tbody tr.muted {

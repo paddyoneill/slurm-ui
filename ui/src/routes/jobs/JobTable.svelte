@@ -77,7 +77,7 @@
 	.table-shell {
 		border: 1px solid var(--colour-border);
 		border-radius: var(--radius-lg);
-		background: rgb(255 255 255 / 0.94);
+		background: var(--colour-surface);
 		box-shadow: var(--shadow-md);
 		overflow: hidden;
 	}
@@ -110,7 +110,11 @@
 	}
 
 	tbody tr.alt {
-		background: rgb(248 250 252 / 0.7);
+		background: rgb(var(--colour-primary-rgb) / 0.03);
+	}
+
+	tbody tr:hover {
+		background: rgb(var(--colour-primary-rgb) / 0.06);
 	}
 
 	tbody tr.muted {
@@ -139,15 +143,19 @@
 
 	.danger-button {
 		padding: 0.72rem 0.95rem;
-		border: 0;
+		border: 1px solid rgb(var(--colour-danger-rgb) / 0.16);
 		border-radius: var(--radius-md);
-		background: rgb(201 66 66 / 0.12);
+		background: rgb(var(--colour-danger-rgb) / 0.1);
 		color: var(--colour-danger);
 		font-weight: 700;
+		transition:
+			background-color var(--transition-fast),
+			border-color var(--transition-fast);
 	}
 
 	.danger-button:hover:not(:disabled) {
-		background: rgb(201 66 66 / 0.2);
+		border-color: rgb(var(--colour-danger-rgb) / 0.25);
+		background: rgb(var(--colour-danger-rgb) / 0.16);
 	}
 
 	.danger-button:disabled {

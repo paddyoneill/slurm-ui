@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { ApiJob } from '$lib/api';
 	import { onMount } from 'svelte';
+	import PageAction from '$lib/components/PageAction.svelte';
 	import JobTable from './JobTable.svelte';
 	import PageIntro from '$lib/components/PageIntro.svelte';
 
@@ -35,14 +36,11 @@
 </script>
 
 <div class="page">
-	<PageIntro
-		title="Jobs"
-		description="Manage Slurm batch jobs"
-		actionHref="/jobs/new"
-		actionLabel="Create job"
-	/>
+	<PageIntro title="Jobs" description="Manage Slurm batch jobs" />
 
 	<JobTable {jobs} {loading} />
+
+	<PageAction href="/jobs/new" label="Create job" />
 </div>
 
 <style>

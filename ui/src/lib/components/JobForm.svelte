@@ -185,7 +185,7 @@
 	.field-input:focus {
 		border-color: var(--colour-primary);
 		outline: none;
-		box-shadow: 0 0 0 3px rgb(15 118 110 / 0.14);
+		box-shadow: 0 0 0 3px rgb(var(--colour-primary-rgb) / 0.14);
 	}
 
 	.field-error {
@@ -241,16 +241,16 @@
 	}
 
 	.env-add:hover {
-		background: rgb(15 118 110 / 0.08);
+		background: var(--colour-primary-soft);
 	}
 
 	.env-remove {
-		background: rgb(201 66 66 / 0.1);
+		background: rgb(var(--colour-danger-rgb) / 0.1);
 		color: var(--colour-danger);
 	}
 
 	.env-remove:hover {
-		background: rgb(201 66 66 / 0.18);
+		background: rgb(var(--colour-danger-rgb) / 0.18);
 	}
 
 	.actions {
@@ -266,7 +266,7 @@
 	}
 
 	.submit-button:hover:not(:disabled) {
-		background: #166534;
+		background: var(--colour-success-strong);
 	}
 
 	.submit-button:disabled {

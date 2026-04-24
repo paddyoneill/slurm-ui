@@ -1,21 +1,10 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
-	import type { AppHref } from '$lib/routes';
-
-	type ActionVariant = 'primary' | 'secondary';
-
 	let {
 		title,
-		description,
-		actionHref,
-		actionLabel,
-		actionVariant = 'primary'
+		description
 	}: {
 		title: string;
 		description: string;
-		actionHref?: AppHref;
-		actionLabel?: string;
-		actionVariant?: ActionVariant;
 	} = $props();
 </script>
 
@@ -24,14 +13,11 @@
 		<h1>{title}</h1>
 		<p>{description}</p>
 	</div>
-
-	{#if actionHref && actionLabel}
-		<a class={`action ${actionVariant}`} href={resolve(actionHref)}>{actionLabel}</a>
-	{/if}
 </div>
 
 <style>
 	.intro {
+		position: relative;
 		display: flex;
 		align-items: flex-start;
 		justify-content: space-between;
@@ -39,13 +25,26 @@
 		padding: var(--space-6);
 		border: 1px solid var(--colour-border);
 		border-radius: var(--radius-lg);
-		background: linear-gradient(135deg, rgb(255 255 255 / 0.96), rgb(248 250 252 / 0.96));
+		background: var(--colour-surface);
 		box-shadow: var(--shadow-md);
+		overflow: hidden;
+	}
+
+	.intro::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background:
+			linear-gradient(135deg, rgb(var(--colour-primary-rgb) / 0.08), transparent 42%),
+			linear-gradient(180deg, rgb(255 255 255 / 0.75), transparent 38%);
+		pointer-events: none;
 	}
 
 	.copy {
+		position: relative;
 		display: grid;
 		gap: var(--space-2);
+		z-index: 1;
 	}
 
 	h1,
@@ -61,39 +60,5 @@
 	p {
 		max-width: 42rem;
 		color: var(--colour-text-muted);
-	}
-
-	.action {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		padding: 0.8rem 1.15rem;
-		border-radius: var(--radius-md);
-		border: 1px solid transparent;
-		font-weight: 700;
-		white-space: nowrap;
-		transition:
-			background-color var(--transition-fast),
-			color var(--transition-fast),
-			border-color var(--transition-fast);
-	}
-
-	.action.primary {
-		background: var(--colour-primary);
-		color: #fff;
-	}
-
-	.action.primary:hover {
-		background: var(--colour-primary-strong);
-	}
-
-	.action.secondary {
-		border-color: var(--colour-border);
-		background: var(--colour-surface);
-		color: var(--colour-text);
-	}
-
-	.action.secondary:hover {
-		background: var(--colour-surface-muted);
 	}
 </style>
